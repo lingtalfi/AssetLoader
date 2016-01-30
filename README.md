@@ -190,7 +190,7 @@ The abstract notation for the manifest file would be something like this:
 (
 <itemName> <:> <eol>
 (<asset1> <eol>) *
-<eol>
+<eol>+
 )*
 
 ```
@@ -199,7 +199,7 @@ The abstract notation for the manifest file would be something like this:
 
 ```php
 <?php
-use AssetLoader\ManifestReaderTool;
+use AssetLoader\Tool\ManifestReaderTool;
 
 require_once "bigbang.php"; // start the local universe
 
@@ -247,12 +247,60 @@ require_once "bigbang.php"; // start the local universe
 
 
 
+Using the static workflow
+---------------------------
+
+Using the static worklow of the asset loader is pretty much like writing assets yourself,
+but it the code necessary to do so might be more concise.
+ 
+Here is an example of how one can use the AssetLoaderRegistry as a helper to load the assets of 
+a given html page:
+
+
+```php
+<?php
+
+use AssetLoader\Registry\AssetLoaderRegistry;
+
+
+AssetLoaderRegistry::readManifest(__DIR__ ."/service/libs.txt"); // first call the manifest
+
+// then define the necessary assets for your page  
+AssetLoaderRegistry::useItems([  
+    'jquery',
+    'commonCss',
+    'wozaicCss',
+    'lys',
+    'lysThreshold',
+]);
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Html page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?php AssetLoaderRegistry::writeAssets(); // now, it's just one line to write the assets, kool? ?>
+    
+</head>
+
+<body>
+Hi, buddy!
+</body>
+</html>
+```
+ 
+ 
+
+
+
                         
                            
 More about Asset loader
 ------------------------
 
-There is the ["conception notes" document](https://github.com/lingtalfi/AssetLoader/blob/master/conception/conception-notes.eng.txt "Asset loader conception document") which you might find helpful.
+There is the ["conception notes" document](https://github.com/lingtalfi/AssetLoader/blob/master/docs/conception/conception-notes.eng.txt "Asset loader conception document") which you might find helpful.
 
 
 
@@ -260,6 +308,13 @@ There is the ["conception notes" document](https://github.com/lingtalfi/AssetLoa
 
 History Log
 ------------------
+    
+- 1.2.0 -- 2016-01-30
+
+    - add AssetLoaderRegistry
+    - assetloader.js: fix already loaded items skip success function call... 
+    - ManifestReaderTool: fix fetchItems method blanks parsing 
+    
     
 - 1.1.0 -- 2016-01-30
 
