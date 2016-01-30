@@ -142,7 +142,19 @@ My personal preference, now, is the second one.
 
 
 
+About manifest
+------------------
 
+The first intention is to make it easy to load asset.
+At first I thought I would use javascript to fetch the manifest, but then because fetching
+a file is an asynchronous operation, it seemed suddenly unecessary complicated.
+
+So I made a php implementation.
+The syntax is intuitive.
+
+One could say that it would be better to have it in the application config, but I would argue that 
+I like the manifest to be on the web side, since it's related to web assets.
+It's basically a standalone "module" that works by its own, so that's that much less trouble for the application.
                         
                         
                         
