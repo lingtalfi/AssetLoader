@@ -21,6 +21,7 @@ Asset Loader has the following features:
 - handling of css and js files
 - handling dynamic and static calls
 - easy to extend for a cache system
+- can read a manifest
 
 
 
@@ -164,6 +165,88 @@ void          declareLoadedItems ( str|array:items )
 Register the given items as loaded, directly in the memory of the asset loader.
 The asset loader will then believe that those assets have been loaded.
                            
+
+                        
+                        
+Using a manifest
+--------------------
+
+Since 1.1.0, there is a php helper class that we can use to read the items from a simple txt file.
+
+The text file is called a manifest, and looks like this:
+
+```txt
+jquery:
+http://code.jquery.com/jquery-2.1.4.min.js
+
+fake:
+/libs/assetloader/demo/fake/js/fake.js
+/libs/assetloader/demo/fake/css/fake.css
+```
+
+The abstract notation for the manifest file would be something like this:
+
+```abap
+(
+<itemName> <:> <eol>
+(<asset1> <eol>) *
+<eol>
+)*
+
+```
+
+### Example of asset loader with manifest
+
+```php
+<?php
+use AssetLoader\ManifestReaderTool;
+
+require_once "bigbang.php"; // start the local universe
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="/libs/assetloader/js/assetloader.js"></script>
+    <title>Html page</title>
+</head>
+
+<body>
+
+
+<div id="blue">I've got the blues</div>
+
+<script>
+    //------------------------------------------------------------------------------/
+    // FIRST REGISTER ALL YOUR LIBRARIES, that's the cost to pay...
+    //------------------------------------------------------------------------------/
+    assetLoader.registerItems(<?php echo json_encode(ManifestReaderTool::fetchItems(__DIR__ . "/libs/assetloader/demo/service/libs.txt")); ?>);
+
+    //------------------------------------------------------------------------------/
+    // NOW YOU CAN DYNAMICALLY INJECT ASSETS IN YOUR PAGE
+    //------------------------------------------------------------------------------/
+
+    assetLoader.loadItems(['jquery', 'fake'], function () {
+
+        fake.sayHello();
+        $(document).ready(function () {
+            $('#blue').css('background', 'blue');
+        });
+    });
+
+</script>
+
+</body>
+</html>
+```
+
+
+
+
+
+
+
                         
                            
 More about Asset loader
@@ -177,6 +260,10 @@ There is the ["conception notes" document](https://github.com/lingtalfi/AssetLoa
 
 History Log
 ------------------
+    
+- 1.1.0 -- 2016-01-30
+
+    - add ManifestReaderTool
     
 - 1.0.0 -- 2016-01-30
 
