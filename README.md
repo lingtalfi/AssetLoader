@@ -18,7 +18,9 @@ Asset Loader has the following features:
 
 - simple and lightweight (less than 150 lines of code)
 - no dependencies
-- handle css and js files
+- handling of css and js files
+- handling dynamic and static calls
+- easy to extend for a cache system
 
 
 
