@@ -165,7 +165,8 @@ void          declareLoadedItems ( str|array:items )
 ```                        
 If you write your assets directly in the html code,
 then the assetLoader doesn't know about them, but their code has been called indeed,
-so there is some kind of de-synchronization here.
+so there is some kind of de-synchronization here between what assets are really loaded, 
+and what assets (items) the assetLoader thinks are loaded.
 
 One possible problem that comes out of this de-synchronization is that if you
 call the assetLoader.loadItems method, since the assetLoader believes that
