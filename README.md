@@ -33,7 +33,8 @@ Nomenclature
 
 - asset: this is a js or css file.
 - item: an item is an array of assets (js, css) labeled with an itemName
-- load: to load an item is the action of dynamically injecting the item's assets into the html page
+- register: this is the first action to do, it's the action of defining what are the items, and what assets are they composed of
+- load: once an item is registered, you can load it. To load an item is the action of dynamically injecting the item's assets into the html page
 - declare: (advanced) if you have existing assets calls in your html page, you can declare them to the asset loader, so that it doesn't accidentally loads them again
 
                     
@@ -100,7 +101,13 @@ You have the following js api:
 void          registerItem ( str:name, array:assets )
 ```
 
-Register an item in the "asset loader" memory.
+Register the item.
+This is the first step: you cannot use an item without registering it.
+Registering an item is simply telling the assetLoader which items you are going to use, and what assets are they composed of.
+
+You might want to use a manifest to register all your items at once, rather than registering them manually 
+one by one.
+ 
 
                         
 ### registerItems            
@@ -133,13 +140,14 @@ The default is head.
 ```js
 array         getLoadedItems ()
 ```
-Return the map of currently loaded items names.
+Return the array of currently loaded items names.
                         
 Note: only items loaded with the asset loader, via the loadItem method will 
 be detected (i.e. if you have manually injected libraries, the asset loader doesn't 
-know about them).
-                        
-Note2: you can use the declareLoadedItem method to manually fake a loaded item.
+know about them, in which case you should use the declareLoadedItem method to 
+manually fake that they are loaded. See the declaredLoadedItems method for more details)
+
+
 
 ### isLoaded              
           
@@ -157,6 +165,9 @@ void          loadItems ( str|array:items, ?callable:success )
 ```
 Load items, then execute the success callback if defined.
 The items parameter can be either an item name (string), or an array of item names.
+The callback is only executed when all the assets of all the given items are finished processing.
+
+
 
 ### declareLoadedItems
 
