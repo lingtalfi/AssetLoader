@@ -208,6 +208,13 @@ The abstract notation for the manifest file would be something like this:
 
 ```
 
+
+The great thing about manifest is that since 1.3.0, assets are loaded exactly in the order that you specify.
+Having this simple correlation between your manifest and the way assets are loaded makes you code with 
+greater confidence (I believe). 
+
+
+
 ### Example of asset loader with manifest
 
 ```php
@@ -305,15 +312,6 @@ Hi, buddy!
 ```
  
  
-
-
-
-                        
-                           
-More about Asset loader
-------------------------
-
-There is the ["conception notes" document](https://github.com/lingtalfi/AssetLoader/blob/master/docs/conception/conception-notes.eng.txt "Asset loader conception document") which you might find helpful.
 
 
 
