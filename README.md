@@ -309,6 +309,10 @@ There is the ["conception notes" document](https://github.com/lingtalfi/AssetLoa
 History Log
 ------------------
     
+- 1.3.0 -- 2016-02-01
+
+    - assetloader.js: now js items are called synchronously, in the order they are declared (in the manifest or manually) 
+    
 - 1.2.1 -- 2016-02-01
 
     - assetloader.js: fix already loaded items skip success function call, again...
