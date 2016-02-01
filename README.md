@@ -16,12 +16,12 @@ Features
 
 Asset Loader has the following features:
 
-- simple and lightweight (less than 150 lines of code)
+- simple and lightweight (less than 200 lines of code)
 - no dependencies
 - handling of css and js files
 - handling dynamic and static calls
 - easy to extend for a cache system
-- can read a manifest
+- can read a manifest file where you specify all your libraries (kool)
 
 
 
@@ -32,8 +32,9 @@ Nomenclature
 ---------------
 
 - asset: this is a js or css file.
-- item: an item is a group of assets used by a module/library.
-- load: to load an item is the action of injecting the item's assets into the html page.
+- item: an item is an array of assets (js, css) labeled with an itemName
+- load: to load an item is the action of dynamically injecting the item's assets into the html page
+- declare: (advanced) if you have existing assets calls in your html page, you can declare them to the asset loader, so that it doesn't accidentally loads them again
 
                     
 Example
@@ -162,10 +163,21 @@ The items parameter can be either an item name (string), or an array of item nam
 ```js
 void          declareLoadedItems ( str|array:items )
 ```                        
-Register the given items as loaded, directly in the memory of the asset loader.
-The asset loader will then believe that those assets have been loaded.
-                           
+If you write your assets directly in the html code,
+then the assetLoader doesn't know about them, but their code has been called indeed,
+so there is some kind of de-synchronization here.
 
+One possible problem that comes out of this de-synchronization is that if you
+call the assetLoader.loadItems method, since the assetLoader believes that
+the items are not loaded, it will call the assets once again.
+
+In order to avoid this problem, you should, whenever it makes sense to do so,
+indicate to the assetLoader which assets/items are already in your html page;
+so that when you call the assetLoader.loadItems method, the assetLoader will
+act as expected.
+
+the declareLoadedItems method does just that: it indicates to the asset loader
+which items are already loaded by your own means.
                         
                         
 Using a manifest
