@@ -74,6 +74,9 @@
                 devError("Cannot load unregistered item: " + item)
             }
         }
+        else {
+            fn();
+        }
     }
 
     function devError(m) {

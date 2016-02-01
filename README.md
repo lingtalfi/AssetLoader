@@ -309,6 +309,10 @@ There is the ["conception notes" document](https://github.com/lingtalfi/AssetLoa
 History Log
 ------------------
     
+- 1.2.1 -- 2016-02-01
+
+    - assetloader.js: fix already loaded items skip success function call, again...
+    
 - 1.2.0 -- 2016-01-30
 
     - add AssetLoaderRegistry
