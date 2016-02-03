@@ -330,10 +330,12 @@ Hi, buddy!
 
 History Log
 ------------------
+     
     
-- 1.3.1 -- 2016-02-03
+    
+- 1.3.2 -- 2016-02-03
 
-    - ManifestReaderTool fix fetchItems method bad item detection 
+    - ManifestReaderTool fix fetchItems method bad item detection again
         
 - 1.3.0 -- 2016-02-01
 

@@ -16,11 +16,11 @@ class ManifestReaderTool
         $ret = [];
         if (file_exists($manifestPath)) {
             $text = file_get_contents($manifestPath);
-            $items = preg_split('!\n{2,}!', $text);            
+            $items = preg_split('!\n\s*\n+!', $text);            
             $items = array_filter($items);
             foreach ($items as $item) {
                 $p = explode(PHP_EOL, trim($item));
-                $name = rtrim(array_shift($p), ':');
+                $name = rtrim(trim(array_shift($p)), ':');
                 $ret[$name] = $p;
             }
         }
