@@ -48,6 +48,7 @@ class AssetLoaderRegistry
     public static function readManifest($manifestPath)
     {
         self::$items2Assets = ManifestReaderTool::fetchItems($manifestPath);
+        a(self::$items2Assets);
     }
 
     public static function writeAssets()

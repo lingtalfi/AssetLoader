@@ -331,6 +331,10 @@ Hi, buddy!
 History Log
 ------------------
     
+- 1.3.1 -- 2016-02-03
+
+    - ManifestReaderTool fix fetchItems method bad item detection 
+        
 - 1.3.0 -- 2016-02-01
 
     - assetloader.js: now js items are called synchronously, in the order they are declared (in the manifest or manually) 
