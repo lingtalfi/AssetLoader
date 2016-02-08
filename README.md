@@ -208,7 +208,12 @@ fake:
 /libs/assetloader/demo/fake/css/fake.css
 ```
 
-The abstract notation for the manifest file would be something like this:
+
+Basically, you first declare the item name followed by a colon,
+and then each subsequent lines (with no blank lines in between) is an asset that composes that item.
+
+
+An abstract notation for the manifest file could be:
 
 ```abap
 (
@@ -218,6 +223,9 @@ The abstract notation for the manifest file would be something like this:
 )*
 
 ```
+
+Comments are allowed (since 1.4.0).
+Comments are lines that start with the sharp symbol (#).
 
 
 The great thing about manifest is that since 1.3.0, assets are loaded exactly in the order that you specify.
@@ -332,6 +340,10 @@ History Log
 ------------------
      
     
+    
+- 1.4.0 -- 2016-02-08
+
+    - ManifestReaderTool now parses comments starting with the sharp symbol
     
 - 1.3.2 -- 2016-02-03
 

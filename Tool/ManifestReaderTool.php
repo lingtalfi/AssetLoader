@@ -16,7 +16,11 @@ class ManifestReaderTool
         $ret = [];
         if (file_exists($manifestPath)) {
             $text = file_get_contents($manifestPath);
-            $items = preg_split('!\n\s*\n+!', $text);            
+
+            // strip comments
+            $text = preg_replace('!^\s*#.*$!m','', $text);
+            
+            $items = preg_split('!\n\s*\n+!', $text);
             $items = array_filter($items);
             foreach ($items as $item) {
                 $p = explode(PHP_EOL, trim($item));
