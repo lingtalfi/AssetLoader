@@ -21,7 +21,6 @@ Asset Loader has the following features:
 - flexible asset organization tool
 - handling of css and js files, ensuring that they are loaded once only (based on their url)
 - can read a manifest file where you specify all your items (powerful)
-- handling dynamic and static calls
 
 
 
@@ -236,20 +235,17 @@ The callback is only executed when all the assets of all the given items are loa
 ```js
 void          declareLoadedItems ( str|array:items )
 ```                        
-If you write your assets directly in the html code,
-then the assetLoader doesn't know about them, but their code has been called indeed,
-so there is some kind of de-synchronization here between what items are really loaded, 
-and what items the assetLoader thinks are loaded.
+If you write your assets directly in the html code, then the assetLoader doesn't know about them.
 
-One possible problem that comes out of this de-synchronization is that if you
-call the assetLoader.loadItems method, since the assetLoader believes that
-the items are not loaded, it will call the assets once again.
+The problem with that is that you then use the loadItems method, assetLoader will load any asset that it's not aware of,
+and you might end up with a library (or asset) called multiple times.
 
-Now, since 1.5.0, assetLoader loads an asset only if its url has not been called before,
-therefore it might not be a problem.
+Depending on the asset, it might be a problem.
+ 
+The declaredLoadedItems method allows us to manually rectify this problem by putting items 
+directly in the assetLoader's "memory".
 
-However, if you prefer to do so, you can use the declaredLoadedIems method to tell the assetLoader which items 
-were already loaded in your html page.
+In other words, the assetLoader will consider any item passed to the declareLoadedItems as loaded.
 
                         
                         
