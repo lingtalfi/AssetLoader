@@ -15,61 +15,37 @@
      */
     var items = {};
     var loadedItems = [];
-    var loadedAssets = [];
     var position = 'head';
 
     function loadJs(url, fn) {
-        if (false === assetIsLoaded(url)) {
-
-            var script = document.createElement("script");
-            script.type = "application/javascript";
-            script.src = url;
-            script.onload = fn;
-            //script.async = true;
-            if ('head' === position) {
-                var head = document.getElementsByTagName('head')[0];
-                head.appendChild(script);
-            }
-            else if ('bodyEnd' === position) {
-                document.body.appendChild(script);
-            }
-            else {
-                devError("Invalid position: " + position);
-            }
-            loadedAssets.push(url);
+        var script = document.createElement("script");
+        script.type = "application/javascript";
+        script.src = url;
+        script.onload = fn;
+        //script.async = true;
+        if ('head' === position) {
+            var head = document.getElementsByTagName('head')[0];
+            head.appendChild(script);
+        }
+        else if ('bodyEnd' === position) {
+            document.body.appendChild(script);
         }
         else {
-            devDebug("-- asset already loaded: " + url);
-            fn();
+            devError("Invalid position: " + position);
         }
     }
 
     function loadCss(url, fn) {
-        if (false === assetIsLoaded(url)) {
-
-            var style = document.createElement('link');
-            style.rel = 'stylesheet';
-            style.href = url;
-            style.type = 'text/css';
-            document.getElementsByTagName('head')[0].appendChild(style);
-            fn(); // I believe we shouldn't bother waiting for onload with css
-            loadedAssets.push(url);
-        }
-        else {
-            devDebug("-- asset already loaded: " + url);
-            fn();
-        }
+        var style = document.createElement('link');
+        style.rel = 'stylesheet';
+        style.href = url;
+        style.type = 'text/css';
+        document.getElementsByTagName('head')[0].appendChild(style);
+        fn(); // I believe we shouldn't bother waiting for onload with css
     }
 
-    function devDebug(m) {
+    function devDebug(m){
         //console.log(m);
-    }
-
-    function assetIsLoaded(url) {
-        if (-1 !== loadedAssets.indexOf(url)) {
-            return true;
-        }
-        return false;
     }
 
 
@@ -101,7 +77,6 @@
                         fn();
                     }
                 }
-
                 loadNextAsset();
             }
             else {

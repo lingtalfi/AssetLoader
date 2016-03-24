@@ -18,10 +18,10 @@ Asset Loader has the following features:
 
 - simple and lightweight (less than 200 lines of code)
 - no dependencies
-- handling of css and js files
+- flexible asset organization tool
+- handling of css and js files, ensuring that they are loaded once only (based on their url)
+- can read a manifest file where you specify all your items (powerful)
 - handling dynamic and static calls
-- easy to extend for a cache system
-- can read a manifest file where you specify all your libraries (kool)
 
 
 
@@ -31,6 +31,14 @@ Asset Loader has the following features:
 Nomenclature
 ---------------
 
+
+The asset loader manages items.
+
+An item is an array of assets. It must be registered with a name.
+
+An asset is either a js file or a css file. 
+
+
 - asset: this is a js or css file.
 - item: an item is an array of assets (js, css) labeled with an itemName
 - register: this is the first action to do, it's the action of defining what are the items, and what assets are they composed of
@@ -38,7 +46,7 @@ Nomenclature
 - declare: (advanced) if you have existing assets calls in your html page, you can declare them to the asset loader, so that it doesn't accidentally loads them again
 
                     
-Example
+Example 1
 ----------
    
 ```html
@@ -85,6 +93,62 @@ Example
 ```   
    
    
+Example 2
+-------------
+  
+This other cool example, which can be found in the demo, illustrates that assets are loaded once only. 
+   
+   
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<script src="/libs/assetloader/js/assetloader.js"></script>
+	<title>Html page</title>
+</head>
+
+<body>
+
+
+
+<script>
+	//------------------------------------------------------------------------------/
+	// FIRST REGISTER ALL YOUR LIBRARIES, that's the cost to pay...
+	//------------------------------------------------------------------------------/
+	assetLoader.registerItems({
+		p1: ['myplugin.js', 'myplugin2.js'],
+		p2: ['myplugin.js', 'myplugin3.js'],
+	});
+
+	//------------------------------------------------------------------------------/
+	// NOW YOU CAN DYNAMICALLY INJECT ASSETS IN YOUR PAGE
+	//------------------------------------------------------------------------------/
+	assetLoader.loadItems(['p1', 'p2'], function () {
+
+		/**
+		 * (console output: note that myplugin appears only once, although it belongs to both p1 and p2)
+		 * inside myplugin
+		 * inside myplugin2
+		 * inside myplugin3
+		 */
+
+		assetLoader.loadItems('p2', function () {
+
+			/**
+			 * (No extra console output, because p2 is already loaded)
+			 */
+
+		});
+	});
+
+</script>
+
+</body>
+</html>      
+```   
+   
+   
 Methods
 -----------
    
@@ -101,13 +165,11 @@ You have the following js api:
 void          registerItem ( str:name, array:assets )
 ```
 
-Register the item.
-This is the first step: you cannot use an item without registering it.
-Registering an item is simply telling the assetLoader which items you are going to use, and what assets are they composed of.
+Register the item $name with the given $assets.
 
-You might want to use a manifest to register all your items at once, rather than registering them manually 
-one by one.
- 
+This is the first step: you cannot use an item without registering it.
+
+An easy way to register all your items at once is to use a manifest (search for manifest in this document for more info). 
 
                         
 ### registerItems            
@@ -117,6 +179,7 @@ void          registerItems ( map:names2Assets )
 ```
 
 Register multiple items at once, internally use the registerItem method.
+
 names2Assets is an array of name => assets (array).
                 
 
@@ -144,8 +207,7 @@ Return the array of currently loaded items names.
                         
 Note: only items loaded with the asset loader, via the loadItem method will 
 be detected (i.e. if you have manually injected libraries, the asset loader doesn't 
-know about them, in which case you should use the declareLoadedItem method to 
-manually fake that they are loaded. See the declaredLoadedItems method for more details)
+know about them)
 
 
 
@@ -154,7 +216,7 @@ manually fake that they are loaded. See the declaredLoadedItems method for more 
 ```js          
 bool          isLoaded ( str:name )
 ```
-Return whether or not the item is loaded.
+Return whether or not the item is currently loaded.
                 
     
                         
@@ -165,7 +227,7 @@ void          loadItems ( str|array:items, ?callable:success )
 ```
 Load items, then execute the success callback if defined.
 The items parameter can be either an item name (string), or an array of item names.
-The callback is only executed when all the assets of all the given items are finished processing.
+The callback is only executed when all the assets of all the given items are loaded.
 
 
 
@@ -176,20 +238,21 @@ void          declareLoadedItems ( str|array:items )
 ```                        
 If you write your assets directly in the html code,
 then the assetLoader doesn't know about them, but their code has been called indeed,
-so there is some kind of de-synchronization here between what assets are really loaded, 
-and what assets (items) the assetLoader thinks are loaded.
+so there is some kind of de-synchronization here between what items are really loaded, 
+and what items the assetLoader thinks are loaded.
 
 One possible problem that comes out of this de-synchronization is that if you
 call the assetLoader.loadItems method, since the assetLoader believes that
 the items are not loaded, it will call the assets once again.
 
-In order to avoid this problem, you should, whenever it makes sense to do so,
-indicate to the assetLoader which assets/items are already in your html page;
-so that when you call the assetLoader.loadItems method, the assetLoader will
-act as expected.
+Now, since 1.5.0, assetLoader loads an asset only if its url has not been called before,
+therefore it might not be a problem.
 
-the declareLoadedItems method does just that: it indicates to the asset loader
-which items are already loaded by your own means.
+However, if you prefer to do so, you can use the declaredLoadedIems method to tell the assetLoader which items 
+were already loaded in your html page.
+
+                        
+                        
                         
                         
 Using a manifest
@@ -212,26 +275,14 @@ fake:
 Basically, you first declare the item name followed by a colon,
 and then each subsequent lines (with no blank lines in between) is an asset that composes that item.
 
+Comments are allowed (since 1.4.0); comments are lines that start with the sharp symbol (#).
 
-An abstract notation for the manifest file could be:
+Using a manifest has some benefits:
 
-```abap
-(
-<itemName> <:> <eol>
-(<asset1> <eol>) *
-<eol>+
-)*
-
-```
-
-Comments are allowed (since 1.4.0).
-Comments are lines that start with the sharp symbol (#).
-
-
-The great thing about manifest is that since 1.3.0, assets are loaded exactly in the order that you specify.
-Having this simple correlation between your manifest and the way assets are loaded makes you code with 
-greater confidence (I believe). 
-
+- all your assets are centralized in one place
+- this make it easier to organize your items
+ 
+ 
 
 
 ### Example of asset loader with manifest
@@ -282,18 +333,55 @@ require_once "bigbang.php"; // start the local universe
 
 
 
+Organizing your assets as you wish
+------------------------------------
+
+Since v1.5.0, any asset can only be loaded once (based on its url), and therefore you can organize your items as you wish.
+
+For instance, here is an organization of items per library:
+
+```
+jquery:
+http://code.jquery.com/jquery-2.1.4.min.js
+
+fake:
+/libs/assetloader/demo/fake/js/fake.js
+/libs/assetloader/demo/fake/css/fake.css
+```
+
+
+And here is another organization per page
+
+
+```
+page1:
+http://code.jquery.com/jquery-2.1.4.min.js
+/libs/assetloader/demo/fake/js/fake.js
+/libs/assetloader/demo/fake/css/fake.css
+
+
+page2:
+http://code.jquery.com/jquery-2.1.4.min.js
+/libs/anyothercode/fakecode.js
+/libs/anyothercode/fakecode.css
+
+```
+
+
+
+You could organize your items as modules, whatever works for you. 
 
 
 
 
-Using the static workflow
+
+AssetLoaderRegistry helper
 ---------------------------
 
-Using the static worklow of the asset loader is pretty much like writing assets yourself,
-but it the code necessary to do so might be more concise.
- 
-Here is an example of how one can use the AssetLoaderRegistry as a helper to load the assets of 
-a given html page:
+
+The AssetLoaderRegistry can read your manifest, and write corresponding asset calls in your html head.
+
+Here is how you could use it:
 
 
 ```php
@@ -340,6 +428,10 @@ History Log
 ------------------
      
     
+    
+- 1.5.0 -- 2016-03-24
+
+    - Now assets are loaded once only
     
 - 1.4.0 -- 2016-02-08
 
