@@ -425,6 +425,10 @@ History Log
      
     
     
+- 1.6.0 -- 2016-03-25
+
+    - declareLoadedItems now also load the item's assets
+    
 - 1.5.0 -- 2016-03-24
 
     - Now assets are loaded once only

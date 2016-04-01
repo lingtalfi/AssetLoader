@@ -13,7 +13,7 @@
      *
      *          itemName => assets (array)
      */
-    var items = {};
+    var _items = {};
     var loadedItems = [];
     var loadedAssets = [];
     var position = 'head';
@@ -76,8 +76,8 @@
     function loadItem(item, fn) {
         if (false === assetLoader.isLoaded(item)) {
 
-            if (item in items) {
-                var assets = items[item];
+            if (item in _items) {
+                var assets = _items[item];
 
                 function loadNextAsset() {
                     var next = assets.shift();
@@ -122,7 +122,7 @@
             if ('string' === typeof assets) { // in this implementation, also accept strings as it's sometime convenient 
                 assets = [assets];
             }
-            items[name] = assets;
+            _items[name] = assets;
             return this;
         },
         registerItems: function (names2Assets) {
@@ -188,10 +188,47 @@
             for (var i in items) {
                 var name = items[i];
                 if (false === assetLoader.isLoaded(name)) {
-                    loadedItems.push(name);
+
+                    // we load all assets too, so the name MUST be registered
+                    if (name in _items) {
+                        loadedItems.push(name);
+
+                        var assets = _items[name];
+                        for (var j in assets) {
+                            var asset = assets[i];
+                            if (false === assetIsLoaded(asset)) {
+                                loadedAssets.push(asset);
+                            }
+                        }
+                    }
+                    else {
+                        throw new Error("Item " + name + " must be registered before it can bed declared as loaded");
+                    }
                 }
             }
             return this;
-        }
+        },
+        ///**
+        // * Declare statically loaded assets.
+        // *
+        // * That case might happen if you use a static library like jquery, and you
+        // * use jquery in one of your item (for instance you use the jquery asset in your videoPlayer item).
+        // * In that case, if assetLoader doesn't know that the jquery asset is loaded in your html,
+        // * it will call it because it has never been loaded before (from the assetloader's perspective).
+        // *
+        // *
+        // */
+        //declareLoadedAssets: function (assets) {
+        //    if ('string' === typeof assets) {
+        //        assets = [assets];
+        //    }
+        //    for (var i in assets) {
+        //        var url = assets[i];
+        //        if (false === assetIsLoaded(url)) {
+        //            loadedAssets.push(url);
+        //        }
+        //    }
+        //    return this;
+        //}
     };
 })();
