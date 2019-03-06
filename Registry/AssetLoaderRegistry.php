@@ -1,11 +1,11 @@
 <?php
 
-namespace AssetLoader\Registry;
+namespace Ling\AssetLoader\Registry;
 
 /*
  * LingTalfi 2016-01-30
  */
-use AssetLoader\Tool\ManifestReaderTool;
+use Ling\AssetLoader\Tool\ManifestReaderTool;
 
 class AssetLoaderRegistry
 {

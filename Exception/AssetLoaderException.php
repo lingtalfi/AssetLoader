@@ -1,6 +1,6 @@
 <?php
 
-namespace AssetLoader\Exception;
+namespace Ling\AssetLoader\Exception;
 
 /*
  * LingTalfi 2016-01-30

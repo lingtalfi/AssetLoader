@@ -1,11 +1,11 @@
 <?php
 
-namespace AssetLoader\Tool;
+namespace Ling\AssetLoader\Tool;
 
 /*
  * LingTalfi 2016-01-30
  */
-use AssetLoader\Exception\AssetLoaderException;
+use Ling\AssetLoader\Exception\AssetLoaderException;
 
 class ManifestReaderTool
 {

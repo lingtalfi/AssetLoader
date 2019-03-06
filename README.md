@@ -19,7 +19,7 @@ Install
 
 Using the [uni tool](https://github.com/lingtalfi/universe-naive-importer)
 ```bash
-uni import AssetLoader
+uni import Ling/AssetLoader
 ```
 
 
@@ -302,7 +302,7 @@ Using a manifest has some benefits:
 
 ```php
 <?php
-use AssetLoader\Tool\ManifestReaderTool;
+use Ling\AssetLoader\Tool\ManifestReaderTool;
 
 require_once "bigbang.php"; // start the local universe
 
@@ -400,7 +400,7 @@ Here is how you could use it:
 ```php
 <?php
 
-use AssetLoader\Registry\AssetLoaderRegistry;
+use Ling\AssetLoader\Registry\AssetLoaderRegistry;
 
 
 AssetLoaderRegistry::readManifest(__DIR__ ."/service/libs.txt"); // first call the manifest
