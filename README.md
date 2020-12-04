@@ -441,7 +441,11 @@ History Log
 ------------------
      
     
-    
+
+- 1.6.1 -- 2020-12-04
+
+    - Add lpi-deps.byml file
+
 - 1.6.0 -- 2016-03-25
 
     - declareLoadedItems now also load the item's assets
